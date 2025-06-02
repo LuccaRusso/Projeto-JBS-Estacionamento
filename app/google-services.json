@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "556240725672",
+    "project_id": "jbs---estacionamento",
+    "storage_bucket": "jbs---estacionamento.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:556240725672:android:7c0d3298c391505350449d",
+        "android_client_info": {
+          "package_name": "com.example.jbsestacionamento"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwgPWUEJGl9kIdsl7WBgll9piRjtiRUzo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
