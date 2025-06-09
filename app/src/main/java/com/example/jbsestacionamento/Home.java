@@ -1,0 +1,253 @@
+package com.example.jbsestacionamento;
+
+import android.graphics.Color; // Importa Color
+import android.os.Bundle;
+
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat; // Importa ContextCompat
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+public class Home extends AppCompatActivity implements VeiculoAdapter.OnItemClickListener {
+
+    private RecyclerView recyclerView;
+    private VeiculoAdapter veiculoAdapter;
+    private List<Veiculo> todosVeiculos;
+
+    private MaterialButton btnTodos;
+    private MaterialButton btnEntrou;
+    private MaterialButton btnSaiu;
+    private int btnSelecionado =0;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_home);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
+        //pega todos os objetos
+        recyclerView = findViewById(R.id.recycler_view);
+        EditText searchBar = findViewById(R.id.search_bar);
+        btnTodos = findViewById(R.id.btn_all);
+        btnEntrou = findViewById(R.id.btn_entered);
+        btnSaiu = findViewById(R.id.btn_exited);
+        ImageButton fabAdd = findViewById(R.id.fab_add);
+
+        //Gera os veiculos predefinidos no método
+        todosVeiculos = geraVeiculos();
+
+        //inicializa o adapter pra manipular o recyclerview
+        veiculoAdapter = new VeiculoAdapter(todosVeiculos, this, this);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(veiculoAdapter);
+
+        //listener dos botoes
+        btnTodos.setOnClickListener(v -> { //btn todos
+            veiculoAdapter.updateList(todosVeiculos);
+            setSelectedButton(btnTodos);
+        });
+
+        btnEntrou.setOnClickListener(v -> { // btnEntrou
+            List<Veiculo> entrou = new ArrayList<>();
+            for (Veiculo veiculo : todosVeiculos) {
+                if (veiculo.getSaida() == null) {
+                    entrou.add(veiculo);
+                }
+            }
+            veiculoAdapter.updateList(entrou);
+            setSelectedButton(btnEntrou);
+        });
+
+        btnSaiu.setOnClickListener(v -> { //btnSaiu
+            List<Veiculo> saiu = new ArrayList<>();
+            for (Veiculo veiculo : todosVeiculos) {
+                if (veiculo.getSaida() != null) {
+                    saiu.add(veiculo);
+                }
+            }
+            veiculoAdapter.updateList(saiu);
+            setSelectedButton(btnSaiu);
+        });
+
+        fabAdd.setOnClickListener(v -> { // btnAdd
+            showRegisterEntryDialog();
+        });
+
+        //Define o defualt como o todos
+        setSelectedButton(btnTodos);
+    }
+
+    //cores
+    private void setSelectedButton(MaterialButton selectedButton) {
+        // Itera sobre todos os botões e os define como não selecionados
+        MaterialButton[] allButtons = {btnTodos, btnEntrou, btnSaiu};
+        for (MaterialButton button : allButtons) {
+            // Define a cor de fundo para não selecionado
+            button.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.unselected_item_color));
+            // Define a cor do texto para não selecionado
+            button.setTextColor(ContextCompat.getColorStateList(this, R.color.unselected_text_color));
+        }
+
+        // Define o botão clicado como selecionado
+        selectedButton.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.selected_item_color));
+        selectedButton.setTextColor(ContextCompat.getColorStateList(this, R.color.selected_text_color));
+        btnSelecionado = getAtual(selectedButton);
+    }
+
+
+    //Clique nos itens
+    @Override
+    public void onItemClick(Veiculo veiculoClicado) { //clique no item
+        if (veiculoClicado.getSaida() == null) {
+            showRegisterExitDialog(veiculoClicado);
+        } else {
+            Toast.makeText(this, "Veículo " + veiculoClicado.getPlaca() + " já registrou saída.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void showRegisterEntryDialog() { //dialog de entrada de veiculos
+        final android.app.Dialog dialog = new android.app.Dialog(this);
+        dialog.setContentView(R.layout.dialog_entry);
+
+        //Pega os componestes do dialog
+        TextInputEditText editTextPlate = dialog.findViewById(R.id.edit_text_plate);
+        MaterialButton buttonSaveEntry = dialog.findViewById(R.id.button_save_entry);
+
+        buttonSaveEntry.setOnClickListener(v -> { //clique em Salvar
+            String plate = editTextPlate.getText().toString().trim().toUpperCase();
+
+            if (plate.isEmpty() || plate.length() != 7) {
+                editTextPlate.setError("A placa deve ter 7 caracteres (ex: ABC1234).");
+                return;
+            }
+
+            boolean vehicleAlreadyInParking = false; //vê se ja tem a placa
+            for (Veiculo existingVeiculo : todosVeiculos) {
+                if (existingVeiculo.getPlaca().equalsIgnoreCase(plate) && existingVeiculo.getSaida() == null) {
+                    vehicleAlreadyInParking = true;
+                    break;
+                }
+            }
+
+            if (vehicleAlreadyInParking) { //Se tiver ele cai aqui
+                Toast.makeText(this, "Veículo " + plate + " já está no estacionamento.", Toast.LENGTH_SHORT).show();
+            } else {                   // Se não cai aqui e grava tudo
+                todosVeiculos.add(0, new Veiculo(plate, LocalDateTime.now(), null));
+                veiculoAdapter.updateList(getVeciulos(btnSelecionado)); //recarrega a lista doa tual
+                dialog.dismiss();
+                Toast.makeText(this, "Veículo " + plate + " registrado com sucesso!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        if (dialog.getWindow() != null) { //define o fundo transparente
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        }
+
+        dialog.show();
+    }
+
+    private void showRegisterExitDialog(Veiculo veiculoToExit) { //registro de saída
+        final android.app.Dialog dialog = new android.app.Dialog(this);
+        dialog.setContentView(R.layout.dialog_exit);
+
+        //Pega os componestes do dialog
+        TextView tvExitPrompt = dialog.findViewById(R.id.text_view_exit_prompt);
+        MaterialButton buttonYesExit = dialog.findViewById(R.id.button_yes_exit);
+        MaterialButton buttonNoExit = dialog.findViewById(R.id.button_no_exit);
+
+        tvExitPrompt.setText("Deseja registrar a saída do veículo " + veiculoToExit.getPlaca() + "?");
+
+        buttonYesExit.setOnClickListener(v -> { //clique em sim
+            veiculoToExit.setSaida(LocalDateTime.now());
+            veiculoAdapter.updateList(getVeciulos(btnSelecionado)); //recarrega a lista doa tual
+            dialog.dismiss();
+            Toast.makeText(this, "Saída de " + veiculoToExit.getPlaca() + " registrada com sucesso!", Toast.LENGTH_SHORT).show();
+        });
+
+        buttonNoExit.setOnClickListener(v -> { //clique em nao
+            dialog.dismiss();
+        });
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        }
+
+        dialog.show();
+    }
+
+    private List<Veiculo> geraVeiculos() {
+        List<Veiculo> veiculos = new ArrayList<>();
+
+        veiculos.add(new Veiculo("GIULIA",
+                LocalDateTime.of(2025, 6, 6, 12, 45),
+                LocalDateTime.of(2025, 6, 6, 14, 45)));
+
+        veiculos.add(new Veiculo("NATI123",
+                LocalDateTime.of(2025, 6, 6, 13, 10),
+                null));
+
+        veiculos.add(new Veiculo("JEFF123",
+                LocalDateTime.of(2025, 6, 6, 11, 30),
+                null));
+
+        veiculos.add(new Veiculo("LUCCA1",
+                LocalDateTime.of(2025, 6, 6, 10, 00),
+                LocalDateTime.of(2025, 6, 6, 10, 50)));
+
+        veiculos.add(new Veiculo("DANI123",
+                LocalDateTime.of(2025, 6, 6, 9, 15),
+                null));
+
+        return veiculos;
+    }
+
+    private List<Veiculo> getVeciulos(int filtro) {
+        List<Veiculo> veiculosFiltrados = new ArrayList<>();
+
+        todosVeiculos.forEach(veiculo -> {
+            switch (filtro) {
+                case 1: //entrou
+                    if (veiculo.getSaida() == null) {
+                        veiculosFiltrados.add(veiculo);
+                    }
+                    break;
+                case 2: //saiu
+                    if (veiculo.getSaida() != null) {
+                        veiculosFiltrados.add(veiculo);
+                    }
+                    break;
+            }
+        });
+        return veiculosFiltrados;
+    }
+    private int getAtual(MaterialButton button) {
+        if (button == btnTodos) {
+            return 1;
+        } else if (button == btnEntrou) {
+            return 2;
+        }
+            return 3;
+    }
+}

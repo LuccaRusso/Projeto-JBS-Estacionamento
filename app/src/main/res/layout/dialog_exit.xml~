@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Registrar Saída"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="24dp"/>
+
+    <TextView
+        android:id="@+id/text_view_exit_prompt" android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Deseja registrar a saída do veículo [PLACA]?" android:layout_gravity="center_horizontal"
+        android:textAlignment="center" android:layout_marginBottom="32dp"/>
+
+    <Button
+        android:id="@+id/button_yes_exit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sim, Registrar Saída"
+        android:layout_marginBottom="12dp"/>
+
+    <Button
+        android:id="@+id/button_no_exit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Não, Cancelar"
+        style="?attr/materialButtonOutlinedStyle"/>
+
+</LinearLayout>
