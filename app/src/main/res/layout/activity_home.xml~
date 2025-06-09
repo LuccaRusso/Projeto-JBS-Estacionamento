@@ -41,14 +41,13 @@
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_margin="16dp"
-        android:layout_marginTop="20dp"
         android:background="@drawable/search_background"
         android:drawableStart="@android:drawable/ic_menu_search"
         android:hint="Buscar"
         android:padding="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar3" />
+        tools:layout_editor_absoluteY="78dp" />
 
     <LinearLayout
         android:id="@+id/filter_buttons"
