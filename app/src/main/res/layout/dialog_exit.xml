@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="16dp" app:cardElevation="8dp" app:cardBackgroundColor="@android:color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Registrar Saída"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="24dp"/>
+
+        <TextView
+            android:id="@+id/text_view_exit_prompt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Deseja registrar a saída do veículo [PLACA]?"
+            android:layout_gravity="center_horizontal"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="32dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_yes_exit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sim"
+            android:layout_marginBottom="12dp"
+            android:paddingVertical="12dp"
+            app:cornerRadius="8dp"
+            android:backgroundTint="#007BFF"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_no_exit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Não"
+            android:paddingVertical="12dp"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton" app:cornerRadius="8dp"
+            app:strokeColor="#007BFF" android:textColor="#007BFF"/> </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
