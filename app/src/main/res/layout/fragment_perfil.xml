@@ -76,8 +76,9 @@
             android:fontFamily="@font/poppins"
             android:text="Editar perfil"
             android:textColorLink="@color/md_theme_inversePrimary"
-            app:layout_constraintTop_toBottomOf="@+id/emailPerfil"
-            tools:layout_editor_absoluteX="144dp" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/emailPerfil" />
 
         <TextView
             android:id="@+id/acessibilidade"
@@ -92,20 +93,24 @@
             app:layout_constraintTop_toBottomOf="@+id/editarPerfil" />
 
         <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="306dp"
             android:layout_height="139dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="5dp"
             android:orientation="horizontal"
-            app:circularflow_radiusInDP="10dp"
+            android:outlineAmbientShadowColor="#FFFFFF"
+            app:circularflow_radiusInDP="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/acessibilidade">
 
             <androidx.cardview.widget.CardView
-                android:layout_height="139dp"
                 android:layout_width="306dp"
+                android:layout_height="139dp"
                 android:background="#FFFFFF"
-                app:cardCornerRadius="10dp">
+                android:elevation="0dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -180,7 +185,7 @@
                         android:layout_marginTop="12dp"
                         android:background="@color/md_theme_inversePrimary"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.384"
+                        app:layout_constraintHorizontal_bias="0.333"
                         app:layout_constraintStart_toEndOf="@+id/textView2"
                         app:layout_constraintTop_toBottomOf="@+id/switch1"
                         app:srcCompat="@drawable/setinha_direita" />
@@ -240,6 +245,57 @@
                         tools:layout_editor_absoluteX="29dp"
                         tools:layout_editor_absoluteY="48dp" />
 
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="268dp"
+            android:layout_height="41dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            app:circularflow_radiusInDP="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                android:elevation="0dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageButton
+                        android:id="@+id/imageButton2"
+                        android:layout_width="43dp"
+                        android:layout_height="41dp"
+                        android:layout_marginStart="25dp"
+                        android:layout_marginEnd="225dp"
+                        android:background="#FFFFFF"
+                        android:src="@drawable/sair_btn"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.84"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/sair"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/poppins"
+                        android:text="Sair"
+                        android:textColor="#FD1F2D"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toEndOf="@+id/imageButton2"
+                        app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
         </LinearLayout>
