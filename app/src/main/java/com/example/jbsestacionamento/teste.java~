@@ -1,0 +1,46 @@
+package com.example.jbsestacionamento;
+
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
+
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.FragmentManager;
+
+import com.example.jbsestacionamento.dto.User;
+import com.example.jbsestacionamento.dto.UserDao;
+
+public class teste extends AppCompatActivity {
+
+    private UserDao userDao = new UserDao();
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_teste); // seu layout com FragmentContainerView
+
+        int idUsuarioParaTestar = 1; // ID que você quer buscar
+
+        userDao.getUserById(idUsuarioParaTestar, this, new UserDao.UserCallback() {
+            @Override
+            public void onUserReceived(User user) {
+                Log.d("testeActivity", "Usuário recebido no callback: " + user);
+                if (user != null) {
+                    Perfil perfilFragment = new Perfil();
+                    perfilFragment.setUsuario(user);
+
+                    FragmentManager fm = getSupportFragmentManager();
+                    fm.beginTransaction()
+                            .replace(R.id.fragmentContainerView, perfilFragment)
+                            .commit();
+                } else {
+                    Toast.makeText(teste.this, "Usuário não encontrado", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+}
