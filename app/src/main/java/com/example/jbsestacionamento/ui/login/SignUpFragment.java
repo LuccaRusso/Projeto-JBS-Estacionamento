@@ -7,7 +7,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.os.Bundle;
@@ -23,6 +22,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.jbsestacionamento.data.model.User;
+import com.example.jbsestacionamento.data.model.UserDao;
 import com.example.jbsestacionamento.databinding.FragmentSignUpBinding;
 
 import com.example.jbsestacionamento.R;
@@ -31,6 +32,8 @@ public class SignUpFragment extends Fragment {
 
     private LoginViewModel loginViewModel;
     private FragmentSignUpBinding binding;
+
+    private UserDao userDao;
 
     @Nullable
     @Override
@@ -65,9 +68,10 @@ public class SignUpFragment extends Fragment {
         loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
 
+        final EditText emailEdittext = binding.email;
         final EditText usernameEditText = binding.username;
         final EditText passwordEditText = binding.password;
-        final Button loginButton = binding.login2;
+        final Button signupButton = binding.signup;
 
         loginViewModel.getLoginFormState().observe(getViewLifecycleOwner(), new Observer<LoginFormState>() {
             @Override
@@ -75,7 +79,7 @@ public class SignUpFragment extends Fragment {
                 if (loginFormState == null) {
                     return;
                 }
-                loginButton.setEnabled(loginFormState.isDataValid());
+                signupButton.setEnabled(loginFormState.isDataValid());
                 if (loginFormState.getUsernameError() != null) {
                     usernameEditText.setError(getString(loginFormState.getUsernameError()));
                 }
@@ -131,13 +135,17 @@ public class SignUpFragment extends Fragment {
             }
         });
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
+        signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loginViewModel.login(usernameEditText.getText().toString(),
                         passwordEditText.getText().toString());
+                userDao = new UserDao();
+                userDao.registerUser(new User(emailEdittext.getText().toString().trim(),passwordEditText.getText().toString().trim(),usernameEditText.getText().toString().trim()), requireContext(),getParentFragmentManager());
+
             }
         });
+
     }
 
     private void updateUiWithUser(LoggedInUserView model) {

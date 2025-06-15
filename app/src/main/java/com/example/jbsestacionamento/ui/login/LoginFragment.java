@@ -24,6 +24,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.jbsestacionamento.data.model.UserDao;
 import com.example.jbsestacionamento.databinding.FragmentLoginBinding;
 
 import com.example.jbsestacionamento.R;
@@ -32,6 +33,9 @@ public class LoginFragment extends Fragment {
 
     private LoginViewModel loginViewModel;
     private FragmentLoginBinding binding;
+
+    private UserDao userDao;
+
 
     @Nullable
     @Override
@@ -141,6 +145,8 @@ public class LoginFragment extends Fragment {
                 loadingProgressBar.setVisibility(View.VISIBLE);
                 loginViewModel.login(usernameEditText.getText().toString(),
                         passwordEditText.getText().toString());
+                userDao = new UserDao();
+                userDao.loginUser(usernameEditText.getText().toString().trim(),passwordEditText.getText().toString().trim(),requireContext(),getParentFragmentManager());
             }
         });
     }
