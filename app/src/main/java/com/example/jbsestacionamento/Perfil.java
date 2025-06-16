@@ -84,6 +84,11 @@ public class Perfil extends Fragment {
             startActivity(rota);
         });
 
+        binding.voltarPerfil.setOnClickListener(v -> {
+            Intent rota = new Intent(getActivity(), Home.class);
+            startActivity(rota);
+        });
+
         binding.cardSair.setOnClickListener(v -> {
             usuarioAtual = null;
 
