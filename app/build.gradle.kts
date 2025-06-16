@@ -54,5 +54,6 @@ dependencies {
     implementation("org.mindrot:jbcrypt:0.4")
     implementation ("com.google.firebase:firebase-firestore:24.4.1")
     implementation ("com.google.firebase:firebase-core:21.1.1")
-
+    implementation ("androidx.navigation:navigation-fragment:2.5.3")
+    implementation ("androidx.navigation:navigation-ui:2.5.3")
 }

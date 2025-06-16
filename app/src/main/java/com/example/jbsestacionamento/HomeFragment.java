@@ -51,7 +51,7 @@ public class HomeFragment extends Fragment implements VeiculoAdapter.OnItemClick
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ViewCompat.setOnApplyWindowInsetsListener(view.findViewById(R.id.id_home), (v, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(view, (v, insets) -> {
             v.setPadding(
                     insets.getInsets(WindowInsetsCompat.Type.systemBars()).left,
                     insets.getInsets(WindowInsetsCompat.Type.systemBars()).top,
@@ -66,7 +66,6 @@ public class HomeFragment extends Fragment implements VeiculoAdapter.OnItemClick
         btnTodos = view.findViewById(R.id.btn_all);
         btnEntrou = view.findViewById(R.id.btn_entered);
         btnSaiu = view.findViewById(R.id.btn_exited);
-        ImageButton fabAdd = view.findViewById(R.id.fab);
 
         todosVeiculos = geraVeiculos();
 
@@ -100,8 +99,6 @@ public class HomeFragment extends Fragment implements VeiculoAdapter.OnItemClick
             veiculoAdapter.updateList(saiu);
             setSelectedButton(btnSaiu);
         });
-
-        fabAdd.setOnClickListener(v -> showRegisterEntryDialog());
 
         searchBar.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}

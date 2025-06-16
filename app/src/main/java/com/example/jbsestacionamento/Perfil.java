@@ -2,10 +2,12 @@ package com.example.jbsestacionamento;
 
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +22,8 @@ public class Perfil extends Fragment {
 
     FragmentPerfilBinding binding;
     private User usuarioAtual;
+
+    private FragmentManager fragmentManager;
 
     public Perfil() {
     }
@@ -80,13 +84,15 @@ public class Perfil extends Fragment {
         });
 
         binding.btnRedireCadastrar.setOnClickListener(v -> {
-            Intent rota = new Intent(getActivity(), Home.class);
-            startActivity(rota);
+            NavController navController = NavHostFragment.findNavController(
+                    fragmentManager.findFragmentById(R.id.nav_host_fragment_content_main));
+            navController.navigate(R.id.action_perfil_to_homeFragment);
         });
 
         binding.voltarPerfil.setOnClickListener(v -> {
-            Intent rota = new Intent(getActivity(), Home.class);
-            startActivity(rota);
+            NavController navController = NavHostFragment.findNavController(
+                    fragmentManager.findFragmentById(R.id.nav_host_fragment_content_main));
+            navController.navigate(R.id.action_perfil_to_homeFragment);
         });
 
         binding.cardSair.setOnClickListener(v -> {

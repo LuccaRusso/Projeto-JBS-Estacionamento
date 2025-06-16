@@ -10,7 +10,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.jbsestacionamento.Home;
+import com.example.jbsestacionamento.HomeFragment;
 import com.example.jbsestacionamento.Perfil;
 import com.example.jbsestacionamento.R;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -102,7 +102,7 @@ public class UserDao {
 //                                     .commit();
                         } else {
                             fragmentManager.beginTransaction()
-                                    .replace(R.id.nav_graph, new Home())
+                                    .replace(R.id.nav_graph, new HomeFragment())
                                     .addToBackStack(null)
                                     .commit();
                         }
