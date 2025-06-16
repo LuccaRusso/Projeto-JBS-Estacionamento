@@ -1,8 +1,12 @@
 <resources>
     <string name="app_name">JbsEstacionamento</string>
+<<<<<<< HEAD
     <string name="id_home">Home</string>
     <string name="id_user">User</string>
 
+=======
+    <string name="action_settings">Settings</string>
+>>>>>>> 790ff4c94571d9084d1b52db8f55802ba349023f
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
