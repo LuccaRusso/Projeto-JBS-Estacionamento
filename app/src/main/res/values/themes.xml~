@@ -47,12 +47,4 @@
         <item name="colorSurfaceContainerHigh">@color/md_theme_surfaceContainerHigh</item>
         <item name="colorSurfaceContainerHighest">@color/md_theme_surfaceContainerHighest</item>
     </style>
-    <style name="AppTheme.AlertDialog" parent="Theme.MaterialComponents.Light.Dialog.Alert">
-        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.App.CornerSize16dp</item>
-    </style>
-
-    <style name="ShapeAppearanceOverlay.App.CornerSize16dp" parent="">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">16dp</item>
-    </style>
 </resources>

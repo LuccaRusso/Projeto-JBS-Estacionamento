@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval"> <!-- Define a forma como um círculo/oval -->
+    <solid android:color="?attr/colorPrimary" /> <!-- Cor de preenchimento, usando a cor principal do seu tema -->
+    <!-- Se quiser uma cor específica, use: <solid android:color="#FF0000" /> -->
+    <size
+        android:width="48dp"
+        android:height="48dp" /> <!-- Tamanho do círculo -->
+</shape>

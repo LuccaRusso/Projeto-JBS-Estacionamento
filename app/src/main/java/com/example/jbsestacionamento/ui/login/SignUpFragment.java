@@ -1,38 +1,27 @@
 package com.example.jbsestacionamento.ui.login;
 
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.jbsestacionamento.R;
 import com.example.jbsestacionamento.data.model.User;
 import com.example.jbsestacionamento.data.model.UserDao;
 import com.example.jbsestacionamento.databinding.FragmentSignUpBinding;
 
-import com.example.jbsestacionamento.R;
-
 public class SignUpFragment extends Fragment {
 
-    private LoginViewModel loginViewModel;
     private FragmentSignUpBinding binding;
-
     private UserDao userDao;
 
     @Nullable
@@ -41,128 +30,42 @@ public class SignUpFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        while(true){
-            requireActivity().setTitle("");
-            setHasOptionsMenu(true);
-            break;
-        }
-
+        requireActivity().setTitle("");
+        setHasOptionsMenu(true);
         binding = FragmentSignUpBinding.inflate(inflater, container, false);
 
-        binding.loginbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NavController navController = NavHostFragment.findNavController(SignUpFragment.this);
-                navController.navigate(R.id.action_signUpFragment_to_loginFragment);
-            }
+        binding.loginbtn.setOnClickListener(v -> {
+            NavController navController = NavHostFragment.findNavController(SignUpFragment.this);
+            navController.navigate(R.id.action_signUpFragment_to_loginFragment);
         });
 
-
         return binding.getRoot();
-
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
-                .get(LoginViewModel.class);
 
-        final EditText emailEdittext = binding.email;
-        final EditText usernameEditText = binding.username;
-        final EditText passwordEditText = binding.password;
-        final Button signupButton = binding.signup;
+        EditText emailEditText = binding.email;
+        EditText usernameEditText = binding.username;
+        EditText passwordEditText = binding.password;
+        Button signupButton = binding.signup;
 
-        loginViewModel.getLoginFormState().observe(getViewLifecycleOwner(), new Observer<LoginFormState>() {
-            @Override
-            public void onChanged(@Nullable LoginFormState loginFormState) {
-                if (loginFormState == null) {
-                    return;
-                }
-                signupButton.setEnabled(loginFormState.isDataValid());
-                if (loginFormState.getUsernameError() != null) {
-                    usernameEditText.setError(getString(loginFormState.getUsernameError()));
-                }
-                if (loginFormState.getPasswordError() != null) {
-                    passwordEditText.setError(getString(loginFormState.getPasswordError()));
-                }
+        userDao = new UserDao();
+
+        signupButton.setOnClickListener(v -> {
+            String email = emailEditText.getText().toString().trim();
+            String username = usernameEditText.getText().toString().trim();
+            String password = passwordEditText.getText().toString().trim();
+
+            if (email.isEmpty() || username.isEmpty() || password.isEmpty()) {
+                Toast.makeText(requireContext(), "Preencha todos os campos", Toast.LENGTH_SHORT).show();
+                return;
             }
+
+            User user = new User(email, password, username);
+            userDao.registerUser(user, requireContext(), getParentFragmentManager());
         });
-
-        loginViewModel.getLoginResult().observe(getViewLifecycleOwner(), new Observer<LoginResult>() {
-            @Override
-            public void onChanged(@Nullable LoginResult loginResult) {
-                if (loginResult == null) {
-                    return;
-                }
-                if (loginResult.getError() != null) {
-                    showLoginFailed(loginResult.getError());
-                }
-                if (loginResult.getSuccess() != null) {
-                    updateUiWithUser(loginResult.getSuccess());
-                }
-            }
-        });
-
-        TextWatcher afterTextChangedListener = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // ignore
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // ignore
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                loginViewModel.loginDataChanged(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
-            }
-        };
-        usernameEditText.addTextChangedListener(afterTextChangedListener);
-        passwordEditText.addTextChangedListener(afterTextChangedListener);
-        passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    loginViewModel.login(usernameEditText.getText().toString(),
-                            passwordEditText.getText().toString());
-                }
-                return false;
-            }
-        });
-
-        signupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loginViewModel.login(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
-                userDao = new UserDao();
-                userDao.registerUser(new User(emailEdittext.getText().toString().trim(),passwordEditText.getText().toString().trim(),usernameEditText.getText().toString().trim()), requireContext(),getParentFragmentManager());
-
-            }
-        });
-
-    }
-
-    private void updateUiWithUser(LoggedInUserView model) {
-        String welcome = getString(R.string.welcome) + model.getDisplayName();
-        // TODO : initiate successful logged in experience
-        if (getContext() != null && getContext().getApplicationContext() != null) {
-            Toast.makeText(getContext().getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private void showLoginFailed(@StringRes Integer errorString) {
-        if (getContext() != null && getContext().getApplicationContext() != null) {
-            Toast.makeText(
-                    getContext().getApplicationContext(),
-                    errorString,
-                    Toast.LENGTH_LONG).show();
-        }
     }
 
     @Override

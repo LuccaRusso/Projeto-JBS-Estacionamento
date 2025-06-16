@@ -6,6 +6,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 
+import com.example.jbsestacionamento.FirstFragment;
+import com.example.jbsestacionamento.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -84,16 +86,18 @@ public class UserDao {
                         Toast.makeText(context, "Login realizado com sucesso!", Toast.LENGTH_SHORT).show();
 
                         if (user.getAdmin()) {
-//                            Intent intent = new Intent(context, AdminActivity.class);
-//                            context.startActivity(intent);
+                            // Exemplo: navegar para tela de Admin
+//                            fragmentManager.beginTransaction()
+//                                     .replace(R.id.nav_host_fragment, new AdminFragment())
+//                                     .addToBackStack(null)
+//                                     .commit();
                         } else {
-                            //Fragment home = new HomeFragment;
-
-                            //fragmentManager.beginTransaction()
-                            //        .replace(R.id.nav_host_fragment, home)
-                            //        .addToBackStack(null)
-                            //        .commit();
+                            fragmentManager.beginTransaction()
+                                    .replace(R.id.nav_graph, new FirstFragment())
+                                    .addToBackStack(null)
+                                    .commit();
                         }
+
                     } else {
                         Toast.makeText(context, "Senha incorreta", Toast.LENGTH_SHORT).show();
                     }

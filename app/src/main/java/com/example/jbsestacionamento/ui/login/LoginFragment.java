@@ -7,7 +7,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.os.Bundle;
@@ -58,7 +57,6 @@ public class LoginFragment extends Fragment {
                 navController.navigate(R.id.action_loginFragment_to_signUpFragment);
             }
         });
-
 
         // MainActivity.java
         return binding.getRoot();
@@ -139,16 +137,25 @@ public class LoginFragment extends Fragment {
             }
         });
 
+        userDao = new UserDao();
+
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loadingProgressBar.setVisibility(View.VISIBLE);
-                loginViewModel.login(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
-                userDao = new UserDao();
-                userDao.loginUser(usernameEditText.getText().toString().trim(),passwordEditText.getText().toString().trim(),requireContext(),getParentFragmentManager());
+
+                String email = usernameEditText.getText().toString().trim();
+                String senha = passwordEditText.getText().toString().trim();
+
+                if (!email.isEmpty() && !senha.isEmpty()) {
+                    userDao.loginUser(email, senha, requireContext(), getParentFragmentManager());
+                } else {
+                    Toast.makeText(requireContext(), "Preencha todos os campos", Toast.LENGTH_SHORT).show();
+                    loadingProgressBar.setVisibility(View.GONE);
+                }
             }
         });
+
     }
 
     private void updateUiWithUser(LoggedInUserView model) {
