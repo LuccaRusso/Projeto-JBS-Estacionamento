@@ -13,7 +13,7 @@
 
         <action
             android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/perfil" />
+            app:destination="@id/SecondFragment" />
     </fragment>
     <fragment
         android:id="@+id/SecondFragment"
@@ -24,13 +24,5 @@
         <action
             android:id="@+id/action_SecondFragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />
-        <action
-            android:id="@+id/action_SecondFragment_to_perfil"
-            app:destination="@id/perfil" />
     </fragment>
-    <fragment
-        android:id="@+id/perfil"
-        android:name="com.example.jbsestacionamento.Perfil"
-        android:label="fragment_perfil"
-        tools:layout="@layout/fragment_perfil" />
 </navigation>
