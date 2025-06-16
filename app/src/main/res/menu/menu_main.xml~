@@ -11,5 +11,6 @@
         android:id="@+id/id_user"
         android:icon="@drawable/iconprofile"
         android:orderInCategory="100"
+        android:title="@string/id_user"
         app:showAsAction="never" />
 </menu>
