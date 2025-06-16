@@ -1,15 +1,18 @@
 package com.example.jbsestacionamento.data.model;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.jbsestacionamento.FirstFragment;
+import com.example.jbsestacionamento.Home;
+import com.example.jbsestacionamento.Perfil;
 import com.example.jbsestacionamento.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -27,51 +30,51 @@ public class UserDao {
     }
 
     public void registerUser(User user, Context context, FragmentManager fragmentManager) {
-
         if (user.getId() == 0) {
-            database.collection("Usuarios").whereEqualTo("email",user.getEmail()).get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()){
-                    if (!task.getResult().isEmpty()){
-                        Toast.makeText(context,"Esse email já possui cadastro", Toast.LENGTH_SHORT).show();
-                    }
-                    database.collection("Usuarios").document("contador").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            int id = 1;
-                            if (task.isSuccessful()) {
-                                DocumentSnapshot doc = task.getResult();
-                                if (doc.exists()) {
-                                    id = doc.getLong("id").intValue() + 1;
-                                }
+            database.collection("Usuarios").whereEqualTo("email", user.getEmail()).get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            if (!task.getResult().isEmpty()) {
+                                Toast.makeText(context, "Esse email já possui cadastro", Toast.LENGTH_SHORT).show();
+                                return; // Sai do método se email já existe
                             }
-                            user.setId(id);
-                            user.setPassword(BCrypt.hashpw(user.getPassword(),BCrypt.gensalt()));
-                            user.setAdmin(false);
 
-                            Map<String, Object> contadorAtualizado = new HashMap<>();
-                            contadorAtualizado.put("id", id);
+                            // Continua com o cadastro se email não existe
+                            database.collection("Usuarios").document("contador").get()
+                                    .addOnCompleteListener(contadorTask -> {
+                                        int id = 1;
+                                        if (contadorTask.isSuccessful() && contadorTask.getResult().exists()) {
+                                            id = contadorTask.getResult().getLong("id").intValue() + 1;
+                                        }
 
-                            database.collection("Usuarios").document("contador").set(contadorAtualizado);
-                            database.collection("Usuarios").document(String.valueOf(id)).set(user)
-                                    .addOnSuccessListener(aVoid -> {
-                                        Toast.makeText(context, "Usuário salvo com sucesso", Toast.LENGTH_SHORT).show();
+                                        user.setId(id);
+                                        user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
+                                        user.setAdmin(false);
 
-                                        //Fragment home = new HomeFragment;
+                                        Map<String, Object> contadorAtualizado = new HashMap<>();
+                                        contadorAtualizado.put("id", id);
 
-                                        //fragmentManager.beginTransaction()
-                                        //        .replace(R.id.nav_host_fragment, home)
-                                        //        .addToBackStack(null)
-                                        //        .commit();
-                                    })
-                                    .addOnFailureListener(e -> Toast.makeText(context, "Erro ao salvar", Toast.LENGTH_SHORT).show());
+                                        // Atualiza contador e cadastra usuário
+                                        database.collection("Usuarios").document("contador").set(contadorAtualizado);
+                                        database.collection("Usuarios").document(String.valueOf(id)).set(user)
+                                                .addOnSuccessListener(aVoid -> {
+                                                    Toast.makeText(context, "Usuário cadastrado com sucesso!", Toast.LENGTH_SHORT).show();
+
+                                                    // Navega para a tela de login
+                                                    NavController navController = NavHostFragment.findNavController(
+                                                            fragmentManager.findFragmentById(R.id.nav_host_fragment_content_main));
+                                                    navController.navigate(R.id.action_signUpFragment_to_loginFragment);
+                                                })
+                                                .addOnFailureListener(e -> {
+                                                    Toast.makeText(context, "Erro ao cadastrar usuário", Toast.LENGTH_SHORT).show();
+                                                    Log.e("FirestoreError", "Erro ao cadastrar", e);
+                                                });
+                                    });
+                        } else {
+                            Toast.makeText(context, "Erro ao verificar email", Toast.LENGTH_SHORT).show();
+                            Log.e("FirestoreError", "Erro ao verificar email", task.getException());
                         }
                     });
-
-                }else {
-                    Toast.makeText(context, "Erro ao verificar email", Toast.LENGTH_SHORT).show();
-                }
-            });
-
         }
     }
     public void loginUser(String email, String password, Context context, FragmentManager fragmentManager) {
@@ -85,6 +88,12 @@ public class UserDao {
                     if (user != null && BCrypt.checkpw(password, user.getPassword())) {
                         Toast.makeText(context, "Login realizado com sucesso!", Toast.LENGTH_SHORT).show();
 
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("usuario", user);
+
+                        Fragment perfilFragment = new Perfil();
+                        perfilFragment.setArguments(bundle); // Passando o usuário para o fragment de perfil
+
                         if (user.getAdmin()) {
                             // Exemplo: navegar para tela de Admin
 //                            fragmentManager.beginTransaction()
@@ -93,7 +102,7 @@ public class UserDao {
 //                                     .commit();
                         } else {
                             fragmentManager.beginTransaction()
-                                    .replace(R.id.nav_graph, new FirstFragment())
+                                    .replace(R.id.nav_graph, new Home())
                                     .addToBackStack(null)
                                     .commit();
                         }

@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.example.jbsestacionamento.databinding.FragmentPerfilBinding;
-import com.example.jbsestacionamento.dto.User;
+import com.example.jbsestacionamento.data.model.User;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class Perfil extends Fragment {

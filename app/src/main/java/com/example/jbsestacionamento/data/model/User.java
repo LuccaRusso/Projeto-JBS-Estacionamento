@@ -1,6 +1,8 @@
 package com.example.jbsestacionamento.data.model;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
     private int id = 0;
     private String email;
     private String name;
