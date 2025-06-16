@@ -11,6 +11,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.jbsestacionamento.data.model.User;
 import com.example.jbsestacionamento.databinding.ActivityAdminAreaBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -38,10 +39,11 @@ public class AdminAreaActivity extends AppCompatActivity {
         ActivityAdminAreaBinding binding = ActivityAdminAreaBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // PEGAR DA TELA DE LOGIN O ID DO USUARIO
-            String idUsuario = getIntent().getStringExtra("idUsuario");
+        User user = (User) getIntent().getSerializableExtra("usuario");
 
-        DocumentSnapshot usuarioDoc = db.collection("Usuarios").document(idUsuario).get().getResult();
+
+        assert user != null;
+        DocumentSnapshot usuarioDoc = db.collection("Usuarios").document(String.valueOf(user.getId())).get().getResult();
 
         if (usuarioDoc.getString("senha").equals(binding.editTextPassword.getText().toString()) ) {
 
@@ -51,7 +53,7 @@ public class AdminAreaActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Date dataEntrada = document.getDate("data_entrada");
+                                Date dataEntrada = document.getDate("entrada");
 
                                 if (dataEntrada.getMonth() == (new Date().getMonth() - 1)) {
                                     document.getReference().delete();
