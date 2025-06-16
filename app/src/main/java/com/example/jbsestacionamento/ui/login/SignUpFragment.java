@@ -49,11 +49,10 @@ public class SignUpFragment extends Fragment {
         EditText emailEditText = binding.email;
         EditText usernameEditText = binding.username;
         EditText passwordEditText = binding.password;
-        Button signupButton = binding.signup;
 
         userDao = new UserDao();
 
-        signupButton.setOnClickListener(v -> {
+        binding.signup.setOnClickListener(v -> {
             String email = emailEditText.getText().toString().trim();
             String username = usernameEditText.getText().toString().trim();
             String password = passwordEditText.getText().toString().trim();

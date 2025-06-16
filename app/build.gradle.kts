@@ -52,5 +52,7 @@ dependencies {
     implementation ("androidx.recyclerview:recyclerview:1.3.0")
     coreLibraryDesugaring ("com.android.tools:desugar_jdk_libs:2.0.4")
     implementation("org.mindrot:jbcrypt:0.4")
+    implementation ("com.google.firebase:firebase-firestore:24.4.1")
+    implementation ("com.google.firebase:firebase-core:21.1.1")
 
 }
