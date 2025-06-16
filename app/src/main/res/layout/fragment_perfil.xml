@@ -144,7 +144,7 @@
                         app:layout_constraintHorizontal_bias="0.055"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/mail" />
+                        app:srcCompat="@drawable/notificacoes" />
 
                     <ImageView
                         android:id="@+id/imageView3"
