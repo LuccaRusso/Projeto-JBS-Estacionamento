@@ -80,12 +80,12 @@ public class Perfil extends Fragment {
         });
 
         binding.btnRedireCadastrar.setOnClickListener(v -> {
-            Intent rota = new Intent(getActivity(), Home.class);
+            Intent rota = new Intent(getActivity(), SingUp.class);
             startActivity(rota);
         });
 
         binding.voltarPerfil.setOnClickListener(v -> {
-            Intent rota = new Intent(getActivity(), Home.class);
+            Intent rota = new Intent(getActivity(), MainActivity.class);
             startActivity(rota);
         });
 

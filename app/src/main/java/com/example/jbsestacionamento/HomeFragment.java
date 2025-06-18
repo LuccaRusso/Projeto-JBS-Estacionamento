@@ -44,14 +44,18 @@ public class HomeFragment extends Fragment implements VeiculoAdapter.OnItemClick
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_id_home, container, false); // Certifique-se de renomear seu XML para fragment_home.xml
+        // O nome do layout deve ser fragment_id_home.xml
+        return inflater.inflate(R.layout.fragment_id_home, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ViewCompat.setOnApplyWindowInsetsListener(view.findViewById(R.id.id_home), (v, insets) -> {
+        // AQUI ESTAVA O PROBLEMA!
+        // O ID correto para a View raiz do seu layout é 'fragment_id_home',
+        // mas é mais simples aplicar o listener diretamente na 'view' que já é a raiz.
+        ViewCompat.setOnApplyWindowInsetsListener(view, (v, insets) -> {
             v.setPadding(
                     insets.getInsets(WindowInsetsCompat.Type.systemBars()).left,
                     insets.getInsets(WindowInsetsCompat.Type.systemBars()).top,
@@ -66,7 +70,7 @@ public class HomeFragment extends Fragment implements VeiculoAdapter.OnItemClick
         btnTodos = view.findViewById(R.id.btn_all);
         btnEntrou = view.findViewById(R.id.btn_entered);
         btnSaiu = view.findViewById(R.id.btn_exited);
-        ImageButton fabAdd = view.findViewById(R.id.fab);
+        ImageButton fabAdd = view.findViewById(R.id.fab_add);
 
         todosVeiculos = geraVeiculos();
 
@@ -77,6 +81,7 @@ public class HomeFragment extends Fragment implements VeiculoAdapter.OnItemClick
         btnTodos.setOnClickListener(v -> {
             veiculoAdapter.updateList(todosVeiculos);
             setSelectedButton(btnTodos);
+            buscaPlaca(); // Chame buscaPlaca para filtrar a lista inicial se houver algo na barra de busca
         });
 
         btnEntrou.setOnClickListener(v -> {
@@ -88,6 +93,7 @@ public class HomeFragment extends Fragment implements VeiculoAdapter.OnItemClick
             }
             veiculoAdapter.updateList(entrou);
             setSelectedButton(btnEntrou);
+            buscaPlaca(); // Chame buscaPlaca para filtrar a lista inicial se houver algo na barra de busca
         });
 
         btnSaiu.setOnClickListener(v -> {
@@ -99,6 +105,7 @@ public class HomeFragment extends Fragment implements VeiculoAdapter.OnItemClick
             }
             veiculoAdapter.updateList(saiu);
             setSelectedButton(btnSaiu);
+            buscaPlaca(); // Chame buscaPlaca para filtrar a lista inicial se houver algo na barra de busca
         });
 
         fabAdd.setOnClickListener(v -> showRegisterEntryDialog());
@@ -223,6 +230,7 @@ public class HomeFragment extends Fragment implements VeiculoAdapter.OnItemClick
     private void buscaPlaca() {
         String query = searchBar.getText().toString().trim().toUpperCase();
         List<Veiculo> listaFiltrada = new ArrayList<>();
+        // Aplique o filtro de busca sobre a lista já filtrada pelos botões "Todos", "Entrou", "Saiu"
         for (Veiculo veiculo : getVeciulos(btnSelecionado)) {
             if (veiculo.getPlaca().toUpperCase().contains(query)) {
                 listaFiltrada.add(veiculo);
