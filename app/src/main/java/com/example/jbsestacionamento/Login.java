@@ -1,18 +1,11 @@
-package com.example.jbsestacionamento.ui.login;
+package com.example.jbsestacionamento;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.fragment.NavHostFragment;
-
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,40 +13,39 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.jbsestacionamento.R;
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
 import com.example.jbsestacionamento.data.model.UserDao;
-import com.example.jbsestacionamento.databinding.FragmentLoginBinding;
+import com.example.jbsestacionamento.databinding.ActivityLoginBinding;
 
-public class LoginFragment extends Fragment {
-
-    private FragmentLoginBinding binding;
+public class Login extends AppCompatActivity {
+    ActivityLoginBinding binding;
     private UserDao userDao;
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-
-        requireActivity().setTitle("");
-        setHasOptionsMenu(true);
-
-        binding = FragmentLoginBinding.inflate(inflater, container, false);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        binding = ActivityLoginBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.loginActivity), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
         binding.signupbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NavController navController = NavHostFragment.findNavController(LoginFragment.this);
-                navController.navigate(R.id.action_loginFragment_to_signUpFragment);
+                Intent intent = new Intent(Login.this, SingUp.class);
+                startActivity(intent);
+                finish();
             }
         });
-
-        return binding.getRoot();
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
 
         final EditText usernameEditText = binding.username;
         final EditText passwordEditText = binding.password;
@@ -61,7 +53,6 @@ public class LoginFragment extends Fragment {
         final ProgressBar loadingProgressBar = binding.loading;
 
         userDao = new UserDao();
-
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -82,7 +73,6 @@ public class LoginFragment extends Fragment {
             }
             return false;
         });
-
         loginButton.setOnClickListener(v -> {
             loadingProgressBar.setVisibility(View.VISIBLE);
 
@@ -90,17 +80,12 @@ public class LoginFragment extends Fragment {
             String senha = passwordEditText.getText().toString().trim();
 
             if (!email.isEmpty() && !senha.isEmpty()) {
-                userDao.loginUser(email, senha, requireContext(), getParentFragmentManager());
+                userDao.loginUser(email, senha, this);
             } else {
-                Toast.makeText(requireContext(), "Preencha todos os campos", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Preencha todos os campos", Toast.LENGTH_SHORT).show();
                 loadingProgressBar.setVisibility(View.GONE);
             }
         });
-    }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
     }
 }

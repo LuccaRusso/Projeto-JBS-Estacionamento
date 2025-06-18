@@ -12,7 +12,7 @@
         tools:layout="@layout/fragment_id_home" />
     <fragment
         android:id="@+id/id_user"
-        android:name="com.example.jbsestacionamento.UserFragment"
+        android:name="com.example.jbsestacionamento.Perfil"
         android:label="fragment_id_user"
-        tools:layout="@layout/fragment_id_user" />
+        tools:layout="@layout/fragment_perfil" />
 </navigation>
